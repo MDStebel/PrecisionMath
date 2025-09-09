@@ -13,9 +13,6 @@
 //  - The renormalization step ensures |lo| is small relative to hi.
 //  - Subnormals: keep denormals enabled on CPU; flushing may lose a bit of robustness.
 //  - Build with at least -O; inlining hints included.
-//
-//  If you port similar logic to Metal, keep fma(...) and renorm patterns identical.
-//
 
 import Foundation
 import simd
