@@ -103,7 +103,7 @@ This achieves full **double-double precision multiplication**, with error bounde
 
 ## 6. Other Operations
 
-- **Division:** Compute \( \text{hi} = x_h / y_h \), then refine via Newton iteration using DD multiply.  
+- **Division:** Compute \( \text{hi} = \frac{x_h}{y_h} \), then refine via Newton iteration using DD multiply. 
 - **Square root:** Use a double-precision initial guess, refine with Newton’s method.  
 - **Normalization:** After each operation, ensure `hi` is the rounded double and `lo` is the small correction.
 
