@@ -21,6 +21,7 @@ This is *not* a new IEEE format — it’s a software trick relying on carefully
 The entire scheme depends on algorithms that decompose floating-point operations into exact parts.
 
 ### TwoSum
+
 Computes the exact sum of two doubles:
 
 $$
@@ -28,6 +29,7 @@ $$
 $$
 
 ### TwoProd
+
 Computes the exact product of two doubles (using FMA if available):
 
 $$
@@ -43,12 +45,9 @@ These **error-free transforms** guarantee correctness within IEEE-754 double pre
 Given two double-double numbers  
 \( x = (x_h, x_l) \), \( y = (y_h, y_l) \):
 
-1. \( (s, e) = \text{TwoSum}(x_h, y_h) \)  
-   Add high parts, capture residual.  
-2. \( t = x_l + y_l \)  
-   Add low parts.  
-3. \( (s_2, e_2) = \text{TwoSum}(s, t) \)  
-   Fold in the low parts.  
+1. \( (s, e) = \text{TwoSum}(x_h, y_h) \) — add high parts, capture residual.  
+2. \( t = x_l + y_l \) — add low parts.  
+3. \( (s_2, e_2) = \text{TwoSum}(s, t) \) — fold in the low parts.  
 4. Result:
 
 $$
@@ -63,14 +62,10 @@ After a brief **renormalization** step (ensuring \( |z_l| < \mathrm{ulp}(z_h) \)
 
 Given \( x = (x_h, x_l) \), \( y = (y_h, y_l) \):
 
-1. \( (p, e) = \text{TwoProd}(x_h, y_h) \)  
-   Main product and rounding error.  
-2. \( p_1 = p \)  
-   Start with the main product.  
-3. \( p_2 = (x_h \cdot y_l) + (x_l \cdot y_h) \)  
-   Cross terms.  
-4. \( (s, e_2) = \text{TwoSum}(p_1, p_2) \)  
-   Combine partial results.  
+1. \( (p, e) = \text{TwoProd}(x_h, y_h) \) — main product and rounding error.  
+2. \( p_1 = p \) — start with the main product.  
+3. \( p_2 = (x_h \cdot y_l) + (x_l \cdot y_h) \) — cross terms.  
+4. \( (s, e_2) = \text{TwoSum}(p_1, p_2) \) — combine partial results.  
 5. Accumulate small terms:
 
 $$
@@ -95,7 +90,7 @@ This achieves full **double-double precision multiplication**, with error bounde
 
 ## 5. Why It Works
 
-- IEEE-754 doubles include guard digits and FMA, enabling recovery of round-off errors exactly.  
+- IEEE-754 doubles include **guard digits** and **FMA**, enabling recovery of round-off errors exactly.  
 - Keeping the small remainder separately yields roughly \( 53 + 53 = 106 \) bits of precision.  
 - Performance: about **10–20× slower** than native double operations, but still **much faster** than arbitrary-precision libraries.
 
@@ -103,9 +98,9 @@ This achieves full **double-double precision multiplication**, with error bounde
 
 ## 6. Other Operations
 
-- **Division:** Compute \( \text{hi} = \frac{x_h}{y_h} \), then refine via Newton iteration using DD multiply. 
-- **Square root:** Use a double-precision initial guess, refine with Newton’s method.  
-- **Normalization:** After each operation, ensure `hi` is the rounded double and `lo` is the small correction.
+- **Division:** Compute \( \text{hi} = \frac{x_h}{y_h} \), then refine via Newton iteration using DD multiply.  
+- **Square root:** Use an initial double-precision estimate and refine with Newton’s method.  
+- **Normalization:** After each operation, ensure \( hi \) is the rounded double and \( lo \) is the small correction.
 
 ---
 
