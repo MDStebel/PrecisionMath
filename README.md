@@ -176,5 +176,5 @@ func mandelbrotIterationsDD(...) -> Int {
 ## 11. License
 
 Part of **Mandelbrot Metal**  
-© Michael Stebel. All rights reserved.
+© 2025 Michael Stebel. All rights reserved.
 
